@@ -72,9 +72,10 @@ def pdf_to_word():
     # 获取文件名、文件路径
 
     #将pdf转换为word  保存在相同路径下
-    file = request.files['file']
-    filename = file.filename
-    file.save(filename)
+    # file = request.files['file']
+    params = request.get_json()
+    filename = params['filename']
+    # file.save(filename)
 
     # Convert PDF to Word
     with open(filename, 'rb') as pdf_file:
