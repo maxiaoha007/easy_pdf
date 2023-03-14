@@ -1,10 +1,12 @@
 from datetime import datetime
-from flask import render_template, request
+from flask import render_template, request, send_file
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
-
+import os
+import PyPDF2
+import docx2pdf
 
 @app.route('/')
 def index():
@@ -64,3 +66,23 @@ def get_count():
     """
     counter = Counters.query.filter(Counters.id == 1).first()
     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
+
+@app.route("/api/pdftoword", methods=["POST"])
+def pdf_to_word():
+    # 获取文件名、文件路径
+
+    #将pdf转换为word  保存在相同路径下
+    file = request.files['file']
+    filename = file.filename
+    file.save(filename)
+
+    # Convert PDF to Word
+    with open(filename, 'rb') as pdf_file:
+        pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+        text = ""
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+        new_filename = os.path.splitext(filename)[0] + '.docx'
+        docx2pdf.convert(text, new_filename)
+
+    return send_file(new_filename, as_attachment=True)
