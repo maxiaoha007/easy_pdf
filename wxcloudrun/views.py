@@ -7,6 +7,7 @@ from wxcloudrun.response import make_succ_empty_response, make_succ_response, ma
 import os
 import PyPDF2
 import docx2pdf
+import logging
 
 @app.route('/')
 def index():
