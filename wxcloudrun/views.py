@@ -75,7 +75,7 @@ def pdf_to_word():
     #将pdf转换为word  保存在相同路径下
     # file = request.files['file']
     params = request.get_json()
-    print(params)
+    logging.info('params',params)
     filename = params['filename']
     # file.save(filename)
 
