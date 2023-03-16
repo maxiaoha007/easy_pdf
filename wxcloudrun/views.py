@@ -86,6 +86,7 @@ def pdf_to_word():
     fileID = params['fileID']
     # 获取文件临时下载路径
     url = f'http://api.weixin.qq.com/tcb/batchdownloadfile'
+    head = {'Content-Type': 'application/json'}
     data = {
         'env': 'prod-6gifok82d52efeb7',
         'file_list': [
@@ -93,7 +94,7 @@ def pdf_to_word():
         ]
     }
     current_app.logger.info('data:%s' % data)
-    # data = urllib.parse.urlencode(data).encode('utf-8')
+    data = urllib.parse.urlencode(data).encode('utf-8')
     result = urllib.request.Request(url=url, data=data)
     current_app.logger.info('result:%s' % result)
     response = urllib.request.urlopen(result)
