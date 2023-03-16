@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, send_file
+from flask import render_template, request, send_file, current_app
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
@@ -79,18 +79,18 @@ def pdf_to_word():
     # 检查filePath参数
     if 'fileID' not in params:
         return make_err_response('缺少fileID参数')
-    logging.info(params)
+    current_app.logger.info(params)
     fileID= params['fileID']
     # 获取文件临时下载路径
-    url = f'https://api.weixin.qq.com/tcb/batchdownloadfile'
-
+    url = f'http://api.weixin.qq.com/tcb/batchdownloadfile'
     headers = {
         'env': 'prod-6gifok82d52efeb7',
-        'file_list':[
-            {'fileid':fileID,'max_age':'86400'}
+        'file_list': [
+            {'fileid': fileID, 'max_age': '86400'}
         ]
     }
     result = req.Request(url=url, headers=headers)
+    logging.info(result)
     response = req.urlopen(result)
     download_url = response.read()['file_list'][0]['download_url']
     # file.save(filename)
