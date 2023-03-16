@@ -90,7 +90,7 @@ def pdf_to_word():
         ]
     }
     result = req.Request(url=url, headers=headers)
-    logging.info(result)
+    current_app.logger.info(result)
     response = req.urlopen(result)
     download_url = response.read()['file_list'][0]['download_url']
     # file.save(filename)
