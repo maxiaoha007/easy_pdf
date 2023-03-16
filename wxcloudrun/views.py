@@ -97,7 +97,7 @@ def pdf_to_word():
     }
 
     current_app.logger.info('data:%s' % data)
-    data = urllib.parse.urlencode(data).encode('utf-8')
+    # data = urllib.parse.urlencode(data).encode('utf-8')
     response = requests.post(url=url, headers=head, data=json.dumps(data))
     # current_app.logger.info('result:%s' % result)
     # response = urllib.request.urlopen(result)
