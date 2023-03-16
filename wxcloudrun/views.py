@@ -75,8 +75,11 @@ def pdf_to_word():
     #将pdf转换为word  保存在相同路径下
     # file = request.files['file']
     params = request.get_json()
-    logging.info('params',params)
-    filename = params['filename']
+    # 检查filePath参数
+    if 'filePath' not in params:
+        return make_err_response(params, '缺少filePath参数')
+    logging.info(params)
+    filename = params['filePath']
     # file.save(filename)
 
     # Convert PDF to Word
