@@ -89,6 +89,7 @@ def pdf_to_word():
             {'fileid': fileID, 'max_age': '86400'}
         ]
     }
+    current_app.logger.info(headers)
     result = req.Request(url=url, headers=headers)
     current_app.logger.info(result)
     response = req.urlopen(result)
