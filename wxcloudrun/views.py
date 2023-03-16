@@ -8,8 +8,10 @@ import os
 import PyPDF2
 import docx2pdf
 import logging
-import urllib.request
+# import urllib.request
 import urllib.parse
+import json
+import requests
 
 
 @app.route('/')
@@ -93,14 +95,15 @@ def pdf_to_word():
             {'fileid': fileID, 'max_age': 86400}
         ]
     }
+
     current_app.logger.info('data:%s' % data)
     data = urllib.parse.urlencode(data).encode('utf-8')
-    result = urllib.request.Request(url=url, headers=head, data=data)
-    current_app.logger.info('result:%s' % result)
-    response = urllib.request.urlopen(result)
+    response = requests.post(url=url, headers=head, data=json.dumps(data))
+    # current_app.logger.info('result:%s' % result)
+    # response = urllib.request.urlopen(result)
     current_app.logger.info('response:%s' % response)
     # download_url = response.read()['file_list'][0]['download_url']
-    download_url = response.read().decode('utf-8')
+    download_url = response.text
     current_app.logger.info('download_url:%s' % download_url)
     # file.save(filename)
 
