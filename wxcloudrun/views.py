@@ -8,6 +8,7 @@ import os
 import PyPDF2
 import docx2pdf
 import logging
+import urllib.request as req
 
 @app.route('/')
 def index():
@@ -76,19 +77,31 @@ def pdf_to_word():
     # file = request.files['file']
     params = request.get_json()
     # 检查filePath参数
-    if 'filePath' not in params:
-        return make_err_response(params)
+        if 'fileID' not in params:
+        return make_err_response('缺少fileID参数')
     logging.info(params)
-    filename = params['filePath']
+    fileID= params['fileID']
+    # 获取文件临时下载路径
+    url = f'https://api.weixin.qq.com/tcb/batchdownloadfile'
+
+    headers = {
+        'env': 'prod-6gifok82d52efeb7',
+        'file_list':[
+            {'fileid':fileID,'max_age':'86400'}
+        ]
+    }
+    result = req.Request(url=url, headers=headers)
+    response = req.urlopen(result)
+    download_url = response.read()['file_list'][0]['download_url']
     # file.save(filename)
 
     # Convert PDF to Word
-    with open(filename, 'rb') as pdf_file:
+    with open(download_url, 'rb') as pdf_file:
         pdf_reader = PyPDF2.PdfFileReader(pdf_file)
         text = ""
         for page in pdf_reader.pages:
             text += page.extract_text()
-        new_filename = os.path.splitext(filename)[0] + '.docx'
+        new_filename = os.path.splitext(download_url)[0] + '.docx'
         docx2pdf.convert(text, new_filename)
 
     return send_file(new_filename, as_attachment=True)
