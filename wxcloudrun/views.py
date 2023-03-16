@@ -8,7 +8,9 @@ import os
 import PyPDF2
 import docx2pdf
 import logging
-import urllib.request as req
+import urllib.request
+import urllib.parse
+
 
 @app.route('/')
 def index():
@@ -69,30 +71,32 @@ def get_count():
     counter = Counters.query.filter(Counters.id == 1).first()
     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
 
+
 @app.route("/api/pdftoword", methods=["POST"])
 def pdf_to_word():
     # 获取文件名、文件路径
 
-    #将pdf转换为word  保存在相同路径下
+    # 将pdf转换为word  保存在相同路径下
     # file = request.files['file']
     params = request.get_json()
     # 检查filePath参数
     if 'fileID' not in params:
         return make_err_response('缺少fileID参数')
     current_app.logger.info(params)
-    fileID= params['fileID']
+    fileID = params['fileID']
     # 获取文件临时下载路径
     url = f'http://api.weixin.qq.com/tcb/batchdownloadfile'
-    headers = {
+    data = {
         'env': 'prod-6gifok82d52efeb7',
         'file_list': [
-            {'fileid': fileID, 'max_age': '86400'}
+            {'fileid': fileID, 'max_age': 86400}
         ]
     }
-    current_app.logger.info(headers)
-    result = req.Request(url=url, headers=headers)
-    current_app.logger.info(result)
-    response = req.urlopen(result)
+    current_app.logger.info('data:%s' % data)
+    data = urllib.parse.urlencode(data).encode('utf-8')
+    result = urllib.request.Request(url=url, data=data)
+    current_app.logger.info('result:%s' % result)
+    response = urllib.request.urlopen(result)
     download_url = response.read()['file_list'][0]['download_url']
     # file.save(filename)
 
