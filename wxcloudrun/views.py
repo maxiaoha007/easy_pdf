@@ -77,7 +77,7 @@ def pdf_to_word():
     params = request.get_json()
     # 检查filePath参数
     if 'filePath' not in params:
-        return make_err_response(params, '缺少filePath参数')
+        return make_err_response(params)
     logging.info(params)
     filename = params['filePath']
     # file.save(filename)
