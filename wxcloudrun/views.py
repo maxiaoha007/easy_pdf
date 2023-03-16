@@ -86,10 +86,10 @@ def pdf_to_word():
     fileID = params['fileID']
     # 获取文件临时下载路径
     url = f'http://api.weixin.qq.com/tcb/batchdownloadfile'
-    head = {'Content-Type': 'application/json',}
+    head = {'Content-Type': 'application/json'}
     data = {
-        'env': 'prod-6gifok82d52efeb7',
-        'file_list': [
+        "env": "prod-6gifok82d52efeb7",
+        "file_list": [
             {'fileid': fileID, 'max_age': 86400}
         ]
     }
