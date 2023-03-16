@@ -98,7 +98,9 @@ def pdf_to_word():
     current_app.logger.info('result:%s' % result)
     response = urllib.request.urlopen(result)
     current_app.logger.info('response:%s' % response)
-    download_url = response.read()['file_list'][0]['download_url']
+    # download_url = response.read()['file_list'][0]['download_url']
+    download_url = response.read().decode('utf-8')
+    current_app.logger.info('download_url:%s' % download_url)
     # file.save(filename)
 
     # Convert PDF to Word
