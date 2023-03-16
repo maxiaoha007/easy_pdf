@@ -77,7 +77,7 @@ def pdf_to_word():
     # file = request.files['file']
     params = request.get_json()
     # 检查filePath参数
-        if 'fileID' not in params:
+    if 'fileID' not in params:
         return make_err_response('缺少fileID参数')
     logging.info(params)
     fileID= params['fileID']
