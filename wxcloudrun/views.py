@@ -112,9 +112,9 @@ def get_download_url(fileid):
             {'fileid': fileid, 'max_age': 86400}
         ]
     }
-    data = json.dumps(data, ensure_ascii=False)
+    data = json.dumps(data, ensure_ascii=False).encode('utf-8')
     current_app.logger.info('data:%s' % data)
-    data = urllib.parse.urlencode(data).encode('utf-8')
+    # data = urllib.parse.urlencode(data).encode('utf-8')
     response = requests.post(url=url, headers=head, data=data)
     # current_app.logger.info('result:%s' % result)
     # response = urllib.request.urlopen(result)
