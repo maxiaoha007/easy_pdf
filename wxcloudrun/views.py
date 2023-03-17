@@ -86,7 +86,7 @@ def pdf_to_word():
         return make_err_response('缺少fileID参数')
     current_app.logger.info(params)
     fileID = params['fileID']
-    download_url = get_download_url(fileID).decode('utf-8')
+    download_url = get_download_url(fileID)
     # file.save(filename)
 
     # Convert PDF to Word
@@ -120,7 +120,7 @@ def get_download_url(fileid):
     # response = urllib.request.urlopen(result)
     current_app.logger.info('response:%s' % response)
     # download_url = response.read()['file_list'][0]['download_url']
-    download_url = eval(response.text).get('file_list')[0].get('fileid')
+    download_url = eval(response.content.decode('utf-8')).get('file_list')[0].get('fileid')
     current_app.logger.info('download_url:%s' % download_url)
     return download_url
 
@@ -135,6 +135,6 @@ def get_fileid(filename):
 
     response = requests.post(url=url, headers=head, data=json.dumps(data))
     current_app.logger.info('response:%s' % response)
-    fileid = eval(response.text).get('file_id')
+    fileid = eval(response.content.decode('utf-8')).get('file_id')
     current_app.logger.info('fileid:%s' % fileid)
     return fileid
