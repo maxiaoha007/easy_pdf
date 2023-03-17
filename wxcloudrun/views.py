@@ -118,9 +118,9 @@ def get_download_url(fileid):
     response = requests.post(url=url, headers=head, data=data)
     # current_app.logger.info('result:%s' % result)
     # response = urllib.request.urlopen(result)
-    current_app.logger.info('response:%s' % response.text.encode('utf-8').decode('unicode_escape'))
+    current_app.logger.info('response:%s' % response.text)
     # download_url = response.read()['file_list'][0]['download_url']
-    download_url = eval(response.text.encode('utf-8').decode('unicode_escape')).get('file_list')[0].get('download_url')
+    download_url = eval(response.text).get('file_list')[0].get('download_url')
     current_app.logger.info('download_url:%s' % download_url)
     return download_url
 
@@ -136,6 +136,6 @@ def get_fileid(filename):
 
     response = requests.post(url=url, headers=head, data=data)
     # current_app.logger.info('response:%s' % response)
-    fileid = eval(response.text.encode('utf-8').decode('unicode_escape')).get('file_id')
+    fileid = eval(response.text).get('file_id')
     current_app.logger.info('fileid:%s' % fileid)
     return fileid
