@@ -99,7 +99,7 @@ def pdf_to_word():
         docx2pdf.convert(text, new_filename)
 
     # 文件上传   获取fileid并返回
-    return  get_fileid(new_filename)
+    return get_fileid(new_filename)
 
 
 def get_download_url(fileid):
@@ -112,7 +112,7 @@ def get_download_url(fileid):
             {'fileid': fileid, 'max_age': 86400}
         ]
     }
-    data = json.dumps(data, encoding='gbk',ensure_ascii=False)
+    data = json.dumps(data, ensure_ascii=False)
     current_app.logger.info('data:%s' % data)
     # data = urllib.parse.urlencode(data).encode('utf-8')
     response = requests.post(url=url, headers=head, data=data)
@@ -132,7 +132,7 @@ def get_fileid(filename):
         "env": "prod-6gifok82d52efeb7",
         "path": filename
     }
-    data = json.dumps(data, encoding='gbk', ensure_ascii=False)
+    data = json.dumps(data, ensure_ascii=False)
 
     response = requests.post(url=url, headers=head, data=data)
     # current_app.logger.info('response:%s' % response)
