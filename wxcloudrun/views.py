@@ -118,6 +118,8 @@ def get_download_url(fileid):
     response = requests.post(url=url, headers=head, data=data)
     # current_app.logger.info('result:%s' % result)
     # response = urllib.request.urlopen(result)
+    current_app.logger.info('response.apparent_encoding:%s' % response.apparent_encoding)
+    current_app.logger.info('response:%s' % response.text)
     current_app.logger.info('response:%s' % response.content.decode('utf-8'))
     # download_url = response.read()['file_list'][0]['download_url']
     download_url = eval(response.content.decode('utf-8')).get('file_list')[0].get('download_url')
