@@ -103,7 +103,7 @@ def pdf_to_word():
     # response = urllib.request.urlopen(result)
     current_app.logger.info('response:%s' % response)
     # download_url = response.read()['file_list'][0]['download_url']
-    download_url = dict(response.text).get('file_list')[0].get('fileid').decode('gbk')
+    download_url = eval(response.text).get('file_list')[0].get('fileid').decode('utf-8')
     current_app.logger.info('download_url:%s' % download_url)
     # file.save(filename)
 
