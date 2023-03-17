@@ -86,13 +86,30 @@ def pdf_to_word():
         return make_err_response('缺少fileID参数')
     current_app.logger.info(params)
     fileID = params['fileID']
+    download_url = get_download_url(fileID)
+    # file.save(filename)
+
+    # Convert PDF to Word
+    with open(download_url, 'rb') as pdf_file:
+        pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+        text = ""
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+        new_filename = os.path.splitext(download_url)[0] + '.docx'
+        docx2pdf.convert(text, new_filename)
+
+    # 文件上传   获取fileid并返回
+    return  get_fileid(new_filename)
+
+
+def get_download_url(fileid):
     # 获取文件临时下载路径
     url = f'http://api.weixin.qq.com/tcb/batchdownloadfile'
     head = {'Content-Type': 'application/json'}
     data = {
         "env": "prod-6gifok82d52efeb7",
         "file_list": [
-            {'fileid': fileID, 'max_age': 86400}
+            {'fileid': fileid, 'max_age': 86400}
         ]
     }
 
@@ -105,15 +122,19 @@ def pdf_to_word():
     # download_url = response.read()['file_list'][0]['download_url']
     download_url = eval(response.text).get('file_list')[0].get('fileid')
     current_app.logger.info('download_url:%s' % download_url)
-    # file.save(filename)
+    return download_url
 
-    # Convert PDF to Word
-    with open(download_url, 'rb') as pdf_file:
-        pdf_reader = PyPDF2.PdfFileReader(pdf_file)
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text()
-        new_filename = os.path.splitext(download_url)[0] + '.docx'
-        docx2pdf.convert(text, new_filename)
+def get_fileid(filename):
+    # 获取文件临时下载路径
+    url = f'http://api.weixin.qq.com/tcb/uploadfile'
+    head = {'Content-Type': 'application/json'}
+    data = {
+        "env": "prod-6gifok82d52efeb7",
+        "path": filename
+    }
 
-    return send_file(new_filename, as_attachment=True)
+    response = requests.post(url=url, headers=head, data=json.dumps(data))
+    current_app.logger.info('response:%s' % response)
+    fileid = eval(response.text).get('file_id')
+    current_app.logger.info('fileid:%s' % fileid)
+    return fileid
