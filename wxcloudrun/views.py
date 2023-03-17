@@ -86,7 +86,7 @@ def pdf_to_word():
         return make_err_response('缺少fileID参数')
     current_app.logger.info(params)
     fileID = params['fileID']
-    download_url = get_download_url(fileID)
+    download_url = get_download_url(fileID).decode('utf-8')
     # file.save(filename)
 
     # Convert PDF to Word
