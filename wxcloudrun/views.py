@@ -112,7 +112,7 @@ def get_download_url(fileid):
             {'fileid': fileid, 'max_age': 86400}
         ]
     }
-    data = json.dumps(data)
+    data = json.dumps(data).encode('utf-8')
     current_app.logger.info('data:%s' % data)
     # data = urllib.parse.urlencode(data).encode('utf-8')
     response = requests.post(url=url, headers=head, data=data)
@@ -133,7 +133,7 @@ def get_fileid(filename):
         "path": filename
     }
 
-    response = requests.post(url=url, headers=head, data=json.dumps(data))
+    response = requests.post(url=url, headers=head, data=json.dumps(data).encode('utf-8'))
     # current_app.logger.info('response:%s' % response)
     fileid = eval(response.text.encode('utf-8').decode('unicode_escape')).get('file_id')
     current_app.logger.info('fileid:%s' % fileid)
